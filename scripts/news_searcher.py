@@ -1,6 +1,7 @@
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
 import configparser
+import os
 
 config=configparser.ConfigParser()
 config.read('../config/config.cfg')

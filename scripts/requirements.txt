@@ -1,0 +1,5 @@
+qdrant-client
+pytorch
+sentence_transformers
+fastapi
+uvicorn

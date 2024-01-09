@@ -34,3 +34,8 @@ class NewsSearcher:
         # In this function you are interested in payload only
         payloads = [hit.payload for hit in search_result]
         return payloads
+
+
+if __name__ == "__main__":
+    neural_searcher = NewsSearcher(collection_name="articles_fr_newsapi")
+    print(neural_searcher.search(text='Guerre en Ukraine'))

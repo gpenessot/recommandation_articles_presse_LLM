@@ -1,14 +1,21 @@
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
+# local tests
 import configparser
+# render server
 import os
 
 config=configparser.ConfigParser()
 config.read('../config/config.cfg')
 
-QDRANT_HOST=config['QDRANT']['host']
-QDRANT_PORT=config['QDRANT']['port']
-QDRANT_API_KEY=config['QDRANT']['qdrant_api_key']
+# local test
+# QDRANT_HOST=config['QDRANT']['host']
+# QDRANT_PORT=config['QDRANT']['port']
+# QDRANT_API_KEY=config['QDRANT']['qdrant_api_key']
+
+QDRANT_HOST=os.getenv('host')
+QDRANT_PORT=os.getenv('port')
+QDRANT_API_KEY=os.getenv('qdrant_api_key')
 
 class NewsSearcher:
     def __init__(self, collection_name):

@@ -1,21 +1,24 @@
 from qdrant_client import QdrantClient
 from sentence_transformers import SentenceTransformer
+
 # local tests
 import configparser
+
 # render server
 import os
 
-config=configparser.ConfigParser()
-config.read('../config/config.cfg')
+config = configparser.ConfigParser()
+config.read("../config/config.cfg")
 
 # local test
 # QDRANT_HOST=config['QDRANT']['host']
 # QDRANT_PORT=config['QDRANT']['port']
 # QDRANT_API_KEY=config['QDRANT']['qdrant_api_key']
 
-QDRANT_HOST=os.getenv('host')
-QDRANT_PORT=os.getenv('port')
-QDRANT_API_KEY=os.getenv('qdrant_api_key')
+QDRANT_HOST = os.getenv("host")
+QDRANT_PORT = os.getenv("port")
+QDRANT_API_KEY = os.getenv("qdrant_api_key")
+
 
 class NewsSearcher:
     def __init__(self, collection_name):
@@ -23,14 +26,14 @@ class NewsSearcher:
         # Initialize encoder model
         self.model = SentenceTransformer("moussaKam/barthez", device="cpu")
         # initialize Qdrant client
-        self.qdrant_client = QdrantClient(url=QDRANT_HOST, 
-                                          port=QDRANT_PORT, 
-                                          api_key=QDRANT_API_KEY)
+        self.qdrant_client = QdrantClient(
+            url=QDRANT_HOST, port=QDRANT_PORT, api_key=QDRANT_API_KEY
+        )
 
     def search(self, text: str):
         # Convert text query into vector
         vector = self.model.encode(text).tolist()
-    
+
         # Use `vector` for search for closest vectors in the collection
         search_result = self.qdrant_client.search(
             collection_name=self.collection_name,
@@ -46,4 +49,4 @@ class NewsSearcher:
 
 if __name__ == "__main__":
     neural_searcher = NewsSearcher(collection_name="articles_fr_newsapi")
-    print(neural_searcher.search(text='Guerre en Ukraine'))
+    print(neural_searcher.search(text="Guerre en Ukraine"))

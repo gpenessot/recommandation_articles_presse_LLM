@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+
 from news_searcher import NewsSearcher
 
 app = FastAPI()

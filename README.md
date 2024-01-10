@@ -6,4 +6,5 @@ Les différentes phases du projet :
 - construction d'une base de données d'articles français
 - représentation vectorielle des titres d'article
 - création d'une base de données vectorielles via Qdrant et mise à jour des données
-- création d'une application de recommandation avec Gradio
+- Mise à disposition des résultats avec FastAPI
+- création d'une application de recommandation Streamlit, plolty et scikit-learn (TSN-E) pour la dataviz

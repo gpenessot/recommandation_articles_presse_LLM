@@ -1,16 +1,16 @@
-#draft #1
+# draft #1
 
-import streamlit as st
-from sentence_transformers import SentenceTransformer
-from qdrant_client import QdrantClient
-import plotly.express as px
-from sklearn.manifold import TSNE
-from sklearn.metrics.pairwise import cosine_similarity
+import configparser
+
 import numpy as np
 import pandas as pd
-import configparser
-from sklearn.preprocessing import MinMaxScaler
 import plotly.express as px
+import streamlit as st
+from qdrant_client import QdrantClient
+from sentence_transformers import SentenceTransformer
+from sklearn.manifold import TSNE
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.preprocessing import MinMaxScaler
 
 config = configparser.ConfigParser()
 config.read("../config/config.cfg")
@@ -23,22 +23,29 @@ QDRANT_API_KEY = config["QDRANT"]["qdrant_api_key"]
 # Qdrant Client
 client = QdrantClient(url=QDRANT_HOST, port=QDRANT_PORT, api_key=QDRANT_API_KEY)
 
-@st.cache_resource(ttl=24*3600, hash_funcs={"MyUnhashableClass": lambda _: None})
+
+@st.cache_resource(ttl=24 * 3600, hash_funcs={"MyUnhashableClass": lambda _: None})
 def load_model():
-	  return SentenceTransformer("/home/gael/.cache/torch/sentence_transformers/moussaKam_barthez/")
+    return SentenceTransformer(
+        "/home/gael/.cache/torch/sentence_transformers/moussaKam_barthez/"
+    )
+
 
 model = load_model()
 
+
 # Function to encode text with the transformer model
 def encode(query_text, model=model):
-    encoder = model #, device='cpu'
+    encoder = model  # , device='cpu'
     return encoder.encode(query_text)
+
 
 # Function to calculate distance between vectors
 def calculate_distance(dataframe, query_vector):
-    vector1 = np.array(dataframe['sentence_embedding'].tolist()).reshape(1, -1)
+    vector1 = np.array(dataframe["sentence_embedding"].tolist()).reshape(1, -1)
     vector2 = query_vector.reshape(1, -1)
     return cosine_similarity(vector1, vector2)[0][0]
+
 
 def generate_item_sentence(item: pd.Series, text_columns=["title"]) -> str:
     """
@@ -90,7 +97,9 @@ def prepare_csv_file(
 
 # Streamlit App
 st.title("LLM News searcher")
-st.markdown("Bienvenue, cette vous recommande les articles en fonction de votre recherche")
+st.markdown(
+    "Bienvenue, cette vous recommande les articles en fonction de votre recherche"
+)
 
 # Input text box
 query_text = st.text_input("Entrez le thème qui vous intéresse :", "Automobile")
@@ -100,14 +109,16 @@ query_vector = encode(query_text)
 
 articles = prepare_csv_file()
 
-articles['distance'] = articles.apply(calculate_distance, 
-                                      query_vector=query_vector, 
-                                      axis=1)
+articles["distance"] = articles.apply(
+    calculate_distance, query_vector=query_vector, axis=1
+)
 
 scaler = MinMaxScaler()
-scaler.fit(articles[['distance']])
-articles['normalised'] = scaler.transform(articles[['distance']])
-results = articles.sort_values(by='distance', ascending=False).nlargest(3, columns='distance')
+scaler.fit(articles[["distance"]])
+articles["normalised"] = scaler.transform(articles[["distance"]])
+results = articles.sort_values(by="distance", ascending=False).nlargest(
+    3, columns="distance"
+)
 
 col1, col2 = st.columns([2, 2])
 
@@ -118,51 +129,48 @@ with col1:
         st.markdown(f" * {results.iloc[index]['title']}")
 
 with col2:
-    st.markdown("**Détail de l\'article :**")
-    
-    liste_titres = st.selectbox(
-        'Quel article souhaitez-vous lire ?',
-        tuple(results['title'].to_list()), index=0)
+    st.markdown("**Détail de l'article :**")
 
-    st.markdown(articles[articles['title']==liste_titres]['content'].values[0])
+    liste_titres = st.selectbox(
+        "Quel article souhaitez-vous lire ?", tuple(results["title"].to_list()), index=0
+    )
+
+    st.markdown(articles[articles["title"] == liste_titres]["content"].values[0])
 
 # Create a t-SNE model
 tsne_model = TSNE(
-    n_components = 3,
-    perplexity = 15,
-    random_state = 42,
-    init = 'random',
-    learning_rate = 200
+    n_components=3, perplexity=15, random_state=42, init="random", learning_rate=200
 )
-tsne_embeddings = tsne_model.fit_transform(np.array(articles['sentence_embedding'].to_list()))
+tsne_embeddings = tsne_model.fit_transform(
+    np.array(articles["sentence_embedding"].to_list())
+)
 
 # Create a DataFrame for visualisation
 visualisation_data = pd.DataFrame(
-    {'x': tsne_embeddings[:, 0],
-     'y': tsne_embeddings[:, 1],
-     'z': tsne_embeddings[:, 2],
-     'title':articles['title'],
-     'Similarité': articles['normalised'].round(3)}
+    {
+        "x": tsne_embeddings[:, 0],
+        "y": tsne_embeddings[:, 1],
+        "z": tsne_embeddings[:, 2],
+        "title": articles["title"],
+        "Similarité": articles["normalised"].round(3),
+    }
 )
 
 # Create the scatter plot using Plotly Express
 plot = px.scatter_3d(
     visualisation_data,
-    x = 'x',
-    y = 'y',
-    z = 'z',
-    color = 'Similarité',
-    hover_name='title',
-    color_continuous_scale = 'rainbow',
-    opacity = 0.7,
-    title = f"Similarité à '{query_text}' visualisé avec t-SNE"
+    x="x",
+    y="y",
+    z="z",
+    color="Similarité",
+    hover_name="title",
+    color_continuous_scale="rainbow",
+    opacity=0.7,
+    title=f"Similarité à '{query_text}' visualisé avec t-SNE",
 )
 
-plot.update_layout(
-    width = 700,
-    height = 650
-)
+plot.update_layout(width=700, height=650)
 
-plot.update_traces(textposition='top center')
+plot.update_traces(textposition="top center")
 
 st.plotly_chart(plot)

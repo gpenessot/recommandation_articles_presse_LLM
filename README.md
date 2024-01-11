@@ -7,4 +7,4 @@ Les différentes phases du projet :
 - représentation vectorielle des titres d'article
 - création d'une base de données vectorielles via Qdrant et mise à jour des données
 - mise à disposition des résultats via API avec FastAPI
-- création d'une application de recommandation Streamlit, plolty et scikit-learn (TSN-E) pour la dataviz
+- création d'une application de recommandation Streamlit, plolty et scikit-learn (T-SNE) pour la dataviz

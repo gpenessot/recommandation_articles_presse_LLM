@@ -139,7 +139,7 @@ with col2:
 
 # Create a t-SNE model
 tsne_model = TSNE(
-    n_components=3, perplexity=15, random_state=42, init="random", learning_rate=200
+    n_components=3, perplexity=5, random_state=42, init="random", learning_rate=10
 )
 tsne_embeddings = tsne_model.fit_transform(
     np.array(articles["sentence_embedding"].to_list())

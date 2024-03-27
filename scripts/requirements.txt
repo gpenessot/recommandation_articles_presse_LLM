@@ -1,8 +1,8 @@
+newsapi-python
 qdrant-client
 torch
 sentence_transformers
 pandas
 numpy
-newsapi-python
 fastapi
 uvicorn

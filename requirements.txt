@@ -2,3 +2,4 @@ qdrant-client
 torch
 sentence_transformers
 pandas
+newsapi

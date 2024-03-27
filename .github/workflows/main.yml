@@ -34,8 +34,6 @@ jobs:
         run: python scripts/make_qdrant_database.py
 
       - name: Push data to GitHub
-        env:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
           git add ./data/*
           git commit -m "Update data"

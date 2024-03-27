@@ -5,18 +5,28 @@ import pandas as pd
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, PointStruct, VectorParams
 from sentence_transformers import SentenceTransformer
+import os
 
-config = configparser.ConfigParser()
-config.read("../config/config.cfg")
+def is_running_in_github_actions():
+    return os.environ.get('GH_ACTIONS') == 'true'
+	
+if is_running_in_github_actions():
+    print("Running in GitHub Actions")
+    QDRANT_HOST = os.environ.get('QDRANT_HOST')
+    QDRANT_PORT = os.environ.get('QDRANT_PORT')
+    QDRANT_API_KEY = os.environ.get('QDRANT_API_TOKEN')
+    
+else:
+    print("Running locally")
+    config = configparser.ConfigParser()
+    config.read("../config/config.cfg")
+    QDRANT_HOST = config["QDRANT"]["host"]
+    QDRANT_PORT = config["QDRANT"]["port"]
+    QDRANT_API_KEY = config["QDRANT"]["qdrant_api_key"]
 
 MODEL_NAME = "moussaKam/barthez"
 encoder = SentenceTransformer(model_name_or_path=MODEL_NAME)
-
-QDRANT_HOST = config["QDRANT"]["host"]
-QDRANT_PORT = config["QDRANT"]["port"]
-QDRANT_API_KEY = config["QDRANT"]["qdrant_api_key"]
 CHUNK_SIZE = 500
-
 client = QdrantClient(url=QDRANT_HOST, port=QDRANT_PORT, api_key=QDRANT_API_KEY)
 
 

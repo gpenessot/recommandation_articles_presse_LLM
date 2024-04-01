@@ -7,9 +7,12 @@ import os
 
 def get_news_api_client():
     """Initialize NewsApiClient with API key from config file."""
-    conf = configparser.ConfigParser()
-    conf.read('../config/config.cfg')
-    api_key = os.environ.get('NEWSAPI_TOKEN') or conf['newsapi']['key']
+    try :
+        api_key = os.environ.get('NEWSAPI_TOKEN')
+    except:
+        conf = configparser.ConfigParser()
+        conf.read('../config/config.cfg')
+        api_key =  conf['newsapi']['key']
     return NewsApiClient(api_key=api_key)
 
 def fetch_articles(newsapi, sources_fr, pages=5):

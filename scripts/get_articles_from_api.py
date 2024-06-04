@@ -71,17 +71,21 @@ def main():
     liste_sources = newsapi.get_sources()
     df_sources = pd.DataFrame().from_dict(liste_sources['sources'])
     sources_fr = df_sources[df_sources['country'] == 'fr']['id'].tolist()
-    sources_fr.pop(2)  # Remove the third source, as it's been identified to cause issues
+    sources_fr.pop(2)  # Remove the third source
 
     concat_articles = fetch_articles(newsapi, sources_fr)
 
-    concat_articles.to_csv(f'../data/raw/news_{dt.now().month}-{dt.now().day}.csv')
+    # Absolute path for saving raw data
+    concat_articles.to_csv(f'/home/runner/work/recommandation_articles_presse_LLM/recommandation_articles_presse_LLM/data/raw/news_{dt.now().month}-{dt.now().day}.csv')
 
-    csv_files = glob.glob('../data/raw/*.csv')
+    # Use absolute path for glob
+    csv_files = glob.glob('/home/runner/work/recommandation_articles_presse_LLM/recommandation_articles_presse_LLM/data/raw/*.csv')
     combined_csv = pd.concat((pd.read_csv(file, index_col=0) for file in csv_files))
 
     combined_csv = clean_combined_csv(combined_csv)
-    combined_csv.to_csv('../data/processed/articles.csv')
+
+    # Absolute path for saving processed data
+    combined_csv.to_csv('/home/runner/work/recommandation_articles_presse_LLM/recommandation_articles_presse_LLM/data/processed/articles.csv')
 
 if __name__ == "__main__":
     main()

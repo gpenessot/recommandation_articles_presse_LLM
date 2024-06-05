@@ -1,11 +1,12 @@
 import configparser
+import os
 
 import numpy as np
 import pandas as pd
 from qdrant_client import QdrantClient
 from qdrant_client.http.models import Distance, PointStruct, VectorParams
 from sentence_transformers import SentenceTransformer
-import os
+
 
 MODEL_NAME = "moussaKam/barthez"
 encoder = SentenceTransformer(model_name_or_path=MODEL_NAME)

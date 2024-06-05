@@ -7,28 +7,32 @@ from qdrant_client.http.models import Distance, PointStruct, VectorParams
 from sentence_transformers import SentenceTransformer
 import os
 
-def is_running_in_github_actions():
-    return os.environ.get('GH_ACTIONS') == 'true'
-	
-if is_running_in_github_actions():
-    print("Running in GitHub Actions")
-    QDRANT_HOST = os.environ.get('QDRANT_HOST')
-    QDRANT_PORT = os.environ.get('QDRANT_PORT')
-    QDRANT_API_KEY = os.environ.get('QDRANT_API_TOKEN')
-    
-else:
-    print("Running locally")
-    config = configparser.ConfigParser()
-    config.read("../config/config.cfg")
-    QDRANT_HOST = config["QDRANT"]["host"]
-    QDRANT_PORT = config["QDRANT"]["port"]
-    QDRANT_API_KEY = config["QDRANT"]["qdrant_api_key"]
-
 MODEL_NAME = "moussaKam/barthez"
 encoder = SentenceTransformer(model_name_or_path=MODEL_NAME)
 CHUNK_SIZE = 500
-client = QdrantClient(url=QDRANT_HOST, port=QDRANT_PORT, api_key=QDRANT_API_KEY)
 
+def qdrant_client() -> QdrantClient:
+    """
+    Initializes and returns a QdrantClient instance.
+    Reads configuration settings either from environment variables (if running in a GitHub Actions environment)
+    or from a configuration file.
+
+    Returns:
+    A QdrantClient instance configured with the specified host, port, and API key.
+    """
+    if os.environ.get('GH_ACTIONS') == 'true':
+        qdrant_host = os.environ.get('QDRANT_HOST')
+        qdrant_port = os.environ.get('QDRANT_PORT')
+        qdrant_api_key = os.environ.get('QDRANT_API_TOKEN')
+    else:
+        config = configparser.ConfigParser()
+        config.read("../config/config.cfg")
+        qdrant_host = config["QDRANT"]["host"]
+        qdrant_port = config["QDRANT"]["port"]
+        qdrant_api_key = config["QDRANT"]["qdrant_api_key"]
+
+    client = QdrantClient(url=qdrant_host, port=qdrant_port, api_key=qdrant_api_key)
+    return client
 
 def generate_item_sentence(item: pd.Series, text_columns=["title"]) -> str:
     """
@@ -123,7 +127,8 @@ if __name__ == "__main__":
 
     points = articles.apply(create_vector_point, axis=1).tolist()
     n_chunks = np.ceil(len(points) / CHUNK_SIZE)
-
+    client = qdrant_client()
+    
     for i, points_chunk in enumerate(np.array_split(points, n_chunks)):
         client.upsert(
             collection_name="articles_fr_newsapi",

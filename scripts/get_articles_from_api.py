@@ -80,7 +80,7 @@ def main():
     concat_articles = fetch_articles(newsapi, sources_fr)
 
     # Absolute path for saving raw data
-    concat_articles.to_csv(f'../data/raw/news_{dt.now().month}-{dt.now().day}.csv')
+    concat_articles.to_csv(f'../data/raw/news_{dt.now().month:02d}-{dt.now().day:02d}.csv')
 
     # Use absolute path for glob
     csv_files = glob.glob('../data/raw/*.csv')

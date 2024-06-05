@@ -5,14 +5,18 @@ import pandas as pd
 import glob
 import os
 
-def get_news_api_client():
-    """Initialize NewsApiClient with API key from config file."""
-    try :
-        api_key = os.environ.get('NEWSAPI_TOKEN')
-    except:
+def get_news_api_client() -> NewsApiClient:
+    """
+    Initialize NewsApiClient with API key from environment variable or config file.
+
+    Returns:
+        NewsApiClient: An instance of NewsApiClient initialized with the API key.
+    """
+    api_key = os.environ.get('NEWSAPI_TOKEN')
+    if not api_key:
         conf = configparser.ConfigParser()
         conf.read('../config/config.cfg')
-        api_key =  conf['newsapi']['key']
+        api_key = conf.get('newsapi', 'key')
     return NewsApiClient(api_key=api_key)
 
 def fetch_articles(newsapi, sources_fr, pages=5):

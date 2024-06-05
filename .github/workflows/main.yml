@@ -36,6 +36,7 @@ jobs:
 
       - name: Make Qdrant database
         env:
+          GH_ACTIONS: ${{ secrets.GH_ACTIONS }}
           QDRANT_API_TOKEN: ${{ secrets.QDRANT_API_TOKEN }}
           QDRANT_HOST: ${{ secrets.QDRANT_HOST }}
           QDRANT_PORT: ${{ secrets.QDRANT_PORT }}

@@ -11,6 +11,7 @@ MODEL_NAME = "moussaKam/barthez"
 encoder = SentenceTransformer(model_name_or_path=MODEL_NAME)
 CHUNK_SIZE = 500
 
+
 def qdrant_client() -> QdrantClient:
     """
     Initializes and returns a QdrantClient instance.
@@ -33,6 +34,7 @@ def qdrant_client() -> QdrantClient:
 
     client = QdrantClient(url=qdrant_host, port=qdrant_port, api_key=qdrant_api_key)
     return client
+
 
 def generate_item_sentence(item: pd.Series, text_columns=["title"]) -> str:
     """
@@ -82,15 +84,6 @@ def prepare_csv_file(
     return df
 
 
-client.recreate_collection(
-    collection_name="articles_fr_newsapi",
-    vectors_config=VectorParams(
-        size=encoder.get_sentence_embedding_dimension(),
-        distance=Distance.COSINE,
-    ),
-)
-
-
 def create_vector_point(item: pd.Series) -> PointStruct:
     """
     Process csv file to fit Qdrant requirements
@@ -127,7 +120,15 @@ if __name__ == "__main__":
 
     points = articles.apply(create_vector_point, axis=1).tolist()
     n_chunks = np.ceil(len(points) / CHUNK_SIZE)
+    
     client = qdrant_client()
+    client.recreate_collection(
+        collection_name="articles_fr_newsapi",
+        vectors_config=VectorParams(
+            size=encoder.get_sentence_embedding_dimension(),
+            distance=Distance.COSINE,
+        ),
+    )
     
     for i, points_chunk in enumerate(np.array_split(points, n_chunks)):
         client.upsert(

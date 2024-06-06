@@ -4,6 +4,9 @@ import configparser
 import pandas as pd
 import glob
 import os
+import pathlib
+
+print(pathlib.Path(__file__).parent.resolve())
 
 def get_news_api_client() -> NewsApiClient:
     """

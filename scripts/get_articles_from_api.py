@@ -1,10 +1,11 @@
-from newsapi import NewsApiClient
-from datetime import datetime as dt
 import configparser
-import pandas as pd
+from datetime import datetime as dt
 import glob
 import os
 import pathlib
+
+from newsapi import NewsApiClient
+import pandas as pd
 
 
 def get_news_api_client() -> NewsApiClient:

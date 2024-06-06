@@ -33,7 +33,7 @@ jobs:
         run: |
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
-          git add data/*
+          git add /home/runner/work/recommandation_articles_presse_LLM/recommandation_articles_presse_LLM/data/*
           git commit -m "Updated data files"
           git push
 

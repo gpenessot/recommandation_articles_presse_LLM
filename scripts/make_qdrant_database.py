@@ -42,7 +42,8 @@ def generate_item_sentence(item: pd.Series, text_columns=["title"]) -> str:
     Process csv file to fit Qdrant requirements
 
     Parameters:
-    - path_to_csv (str): The path to the csv file. Default is "../data/processed/articles.csv".
+    - item (pd.Series): a series
+    - text_columns=["title"]
 
     Returns:
     - pd.DataFrame: The processed dataframe with the following columns:
@@ -58,7 +59,7 @@ def generate_item_sentence(item: pd.Series, text_columns=["title"]) -> str:
 
 
 def prepare_csv_file(
-    path_to_csv: str = "../data/processed/articles.csv",
+    path_to_csv: str = "/home/runner/work/recommandation_articles_presse_LLM/recommandation_articles_presse_LLM/data/processed/articles.csv",
 ) -> pd.DataFrame:
     """
     Process csv file to fit Qdrant requirements

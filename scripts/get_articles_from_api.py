@@ -6,8 +6,6 @@ import glob
 import os
 import pathlib
 
-print(pathlib.Path(__file__).parent.resolve())
-
 def get_news_api_client() -> NewsApiClient:
     """
     Initialize NewsApiClient with API key from environment variable or config file.
@@ -73,6 +71,7 @@ def clean_combined_csv(combined_csv):
 
 def main():
     """Main function to execute the data retrieval and processing."""
+    print(pathlib.Path(__file__).parent.resolve())
     newsapi = get_news_api_client()
 
     liste_sources = newsapi.get_sources()
@@ -83,16 +82,16 @@ def main():
     concat_articles = fetch_articles(newsapi, sources_fr)
 
     # Absolute path for saving raw data
-    concat_articles.to_csv(f'../data/raw/news_{dt.now().month:02d}-{dt.now().day:02d}.csv')
+    concat_articles.to_csv(f'/home/runner/work/recommandation_articles_presse_LLM/recommandation_articles_presse_LLM/data/raw/news_{dt.now().month:02d}-{dt.now().day:02d}.csv')
 
     # Use absolute path for glob
-    csv_files = glob.glob('../data/raw/*.csv')
+    csv_files = glob.glob('/home/runner/work/recommandation_articles_presse_LLM/recommandation_articles_presse_LLM/data/raw/*.csv')
     combined_csv = pd.concat((pd.read_csv(file, index_col=0) for file in csv_files))
 
     combined_csv = clean_combined_csv(combined_csv)
 
     # Absolute path for saving processed data
-    combined_csv.to_csv('../data/processed/articles.csv')
+    combined_csv.to_csv('/home/runner/work/recommandation_articles_presse_LLM/recommandation_articles_presse_LLM/data/processed/articles.csv')
 
 if __name__ == "__main__":
     main()

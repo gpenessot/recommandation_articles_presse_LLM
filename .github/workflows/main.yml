@@ -2,8 +2,8 @@ name: Update News Data and Qdrant Database
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Exécuter quotidiennement à minuit
-  workflow_dispatch:     # Permettre le déclenchement manuel
+    - cron: '0 0 * * *'  
+  workflow_dispatch:     
 
 jobs:
   update_data_and_database:
@@ -11,15 +11,18 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python environment
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.x'  # Adaptez à votre version de Python
+          python-version: '3.10'  
 
       - name: Install dependencies
         run: pip install -r requirements.txt 
+
+      - name: Create data directory 
+        run: mkdir -p data/raw
 
       - name: Get articles from API
         env:

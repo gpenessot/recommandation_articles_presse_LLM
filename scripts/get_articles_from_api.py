@@ -6,6 +6,7 @@ import glob
 import os
 import pathlib
 
+
 def get_news_api_client() -> NewsApiClient:
     """
     Initialize NewsApiClient with API key from environment variable or config file.
@@ -19,6 +20,7 @@ def get_news_api_client() -> NewsApiClient:
         conf.read('../config/config.cfg')
         api_key = conf.get('newsapi', 'key')
     return NewsApiClient(api_key=api_key)
+
 
 def fetch_articles(newsapi, sources_fr, pages=5):
     """
@@ -45,6 +47,7 @@ def fetch_articles(newsapi, sources_fr, pages=5):
             continue
     return concat_articles
 
+
 def clean_combined_csv(combined_csv):
     """
     Clean combined CSV DataFrame.
@@ -69,6 +72,7 @@ def clean_combined_csv(combined_csv):
     combined_csv = combined_csv.drop_duplicates()
     return combined_csv
 
+
 def main():
     """Main function to execute the data retrieval and processing."""
     print(pathlib.Path(__file__).parent.resolve())
@@ -92,6 +96,7 @@ def main():
 
     # Absolute path for saving processed data
     combined_csv.to_csv('/home/runner/work/recommandation_articles_presse_LLM/recommandation_articles_presse_LLM/data/processed/articles.csv')
+
 
 if __name__ == "__main__":
     main()

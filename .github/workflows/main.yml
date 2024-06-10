@@ -34,6 +34,7 @@ jobs:
           git config --global user.email "action@github.com"
           git config --global user.name "GitHub Action"
           git add /home/runner/work/recommandation_articles_presse_LLM/recommandation_articles_presse_LLM/data/*
+          # Commit les changements AVANT la comparaison
           git commit -m "Updated data files"
           # Vérifie si des changements ont été apportés
           if git diff --quiet HEAD; then

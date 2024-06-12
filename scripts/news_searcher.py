@@ -26,9 +26,9 @@ class NewsSearcher:
 
     Attributes:
         collection_name (str): The name of the collection to search in.
-        model (SentenceTransformer): The SentenceTransformer model used for encoding text 
+        model (SentenceTransformer): The SentenceTransformer model used for encoding text
         into vectors.
-        qdrant_client (QdrantClient): The QdrantClient used for searching vectors in the 
+        qdrant_client (QdrantClient): The QdrantClient used for searching vectors in the
         collection.
 
     Methods:
@@ -37,7 +37,7 @@ class NewsSearcher:
             Args:
                 text (str): The text to search for.
             Returns:
-                List[Dict]: A list of dictionaries representing the search results. Each 
+                List[Dict]: A list of dictionaries representing the search results. Each
                 dictionary contains the payload of a news article.
     """
 
@@ -47,9 +47,9 @@ class NewsSearcher:
 
         Attributes:
             collection_name (str): The name of the collection to search in.
-            model (SentenceTransformer): The SentenceTransformer model used for encoding 
+            model (SentenceTransformer): The SentenceTransformer model used for encoding
             text into vectors.
-            qdrant_client (QdrantClient): The QdrantClient used for searching vectors in 
+            qdrant_client (QdrantClient): The QdrantClient used for searching vectors in
             the collection.
         """
         self.collection_name = collection_name
@@ -68,7 +68,7 @@ class NewsSearcher:
             text (str): The text to search for.
 
         Returns:
-            List[Dict]: A list of dictionaries representing the search results. Each dictionary 
+            List[Dict]: A list of dictionaries representing the search results. Each dictionary
             contains the payload of a news article.
         """
         # Convert text query into vector

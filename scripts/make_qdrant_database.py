@@ -22,10 +22,10 @@ def qdrant_client() -> QdrantClient:
     Returns:
     A QdrantClient instance configured with the specified host, port, and API key.
     """
-    if os.environ.get('GH_ACTIONS') == 'true':
-        qdrant_host = os.environ.get('QDRANT_HOST')
-        qdrant_port = os.environ.get('QDRANT_PORT')
-        qdrant_api_key = os.environ.get('QDRANT_API_TOKEN')
+    if os.environ.get("GH_ACTIONS") == "true":
+        qdrant_host = os.environ.get("QDRANT_HOST")
+        qdrant_port = os.environ.get("QDRANT_PORT")
+        qdrant_api_key = os.environ.get("QDRANT_API_TOKEN")
     else:
         config = configparser.ConfigParser()
         config.read("../config/config.cfg")
@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
     points = articles.apply(create_vector_point, axis=1).tolist()
     n_chunks = np.ceil(len(points) / CHUNK_SIZE)
-    
+
     client = qdrant_client()
     client.recreate_collection(
         collection_name="articles_fr_newsapi",
@@ -131,7 +131,7 @@ if __name__ == "__main__":
             distance=Distance.COSINE,
         ),
     )
-    
+
     for i, points_chunk in enumerate(np.array_split(points, n_chunks)):
         client.upsert(
             collection_name="articles_fr_newsapi",

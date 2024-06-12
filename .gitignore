@@ -162,3 +162,4 @@ cython_debug/
 # projet
 config.cfg
 ./notebooks/test_app.ipynb
+notebooks/check_qdrant_db.ipynb

@@ -9,8 +9,19 @@ from sentence_transformers import SentenceTransformer
 
 
 MODEL_NAME = "moussaKam/barthez"
-encoder = SentenceTransformer(model_name_or_path=MODEL_NAME)
 CHUNK_SIZE = 500
+
+
+def load_model(model=MODEL_NAME)
+    """
+    Initializes and returns an encoder.
+    Reads model's name and load it.
+
+    Returns:
+    An encoder
+    """
+    encoder = SentenceTransformer(model_name_or_path=model)
+    return encoder
 
 
 def qdrant_client() -> QdrantClient:
@@ -59,6 +70,7 @@ def generate_item_sentence(item: pd.Series, text_columns=["title"]) -> str:
 
 
 def prepare_csv_file(
+    encoder,
     path_to_csv: str = "/home/runner/work/recommandation_articles_presse_LLM/recommandation_articles_presse_LLM/data/processed/articles.csv",
 ) -> pd.DataFrame:
     """
@@ -116,7 +128,8 @@ def create_vector_point(item: pd.Series) -> PointStruct:
 
 
 if __name__ == "__main__":
-    articles = prepare_csv_file()
+    encoder = load_model()
+    articles = prepare_csv_file(encoder)
     metadata_columns = articles.drop(
         ["newsId", "sentence", "sentence_embedding"], axis=1
     ).columns

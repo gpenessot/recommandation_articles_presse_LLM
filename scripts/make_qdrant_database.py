@@ -12,7 +12,7 @@ MODEL_NAME = "moussaKam/barthez"
 CHUNK_SIZE = 500
 
 
-def load_model(model=MODEL_NAME)
+def load_model(model=MODEL_NAME):
     """
     Initializes and returns an encoder.
     Reads model's name and load it.
@@ -92,7 +92,7 @@ def prepare_csv_file(
     """
     df = pd.read_csv(path_to_csv, index_col=0, encoding="utf-8")
     df = df.reset_index()
-    df = df.drop_duplicates(keep='last')
+    df = df.drop_duplicates(keep="last")
     df.columns = ["newsId", "author", "title", "publishedAt", "content"]
     df["sentence"] = df.apply(generate_item_sentence, axis=1)
     df["sentence_embedding"] = df["sentence"].apply(encoder.encode)
